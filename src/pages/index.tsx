@@ -1,0 +1,34 @@
+import Footer from "@components/Footer";
+import Form from "@components/Form";
+import Navbar from "@/components/Navbar";
+import Features from "@/components/Sections/Features";
+import Intro from "@/components/Sections/Intro";
+import Productivity from "@/components/Sections/Productivity";
+import Reviews from "@/components/Sections/Reviews";
+import type {NextPage} from "next";
+import Head from "next/head";
+
+import styles from "../styles/index.module.scss"
+
+const Home: NextPage = () => {
+    return (
+        <div className={`${styles.body}`}>
+            <Head>
+                <title>
+                    玩配 - 让你的游戏不再孤单
+                </title>
+            </Head>
+            <Navbar/>
+            <main className={`${styles.main} ${styles.body}`}>
+                <Intro/>
+                <Features/>
+                <Productivity/>
+                <Reviews/>
+                <Form/>
+                <Footer/>
+            </main>
+        </div>
+    );
+};
+
+export default Home;

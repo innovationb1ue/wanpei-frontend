@@ -1,0 +1,39 @@
+@use "variables" as *;
+
+.main {
+  width: 100%;
+  padding: min(6vw, 50px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "Raleway", sans-serif;
+  gap: 10px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 1.1rem;
+  z-index: 999;
+
+  ul {
+    color: white;
+    list-style: none;
+    display: flex;
+    white-space: nowrap;
+    gap: 25px;
+
+    li:hover {
+      font-weight: $bold;
+    }
+  }
+
+  a {
+    color: white;
+    text-decoration: none;
+  }
+
+  a:active {
+    color: white;
+  }
+}
+
+

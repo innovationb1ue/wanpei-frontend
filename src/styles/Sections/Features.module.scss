@@ -1,0 +1,16 @@
+@use "../mx-media.scss" as *;
+
+.main {
+  width: 100%;
+
+  * {
+    font-size: 1.2rem;
+  }
+}
+
+.textBox {
+  width: 40%;
+  text-align: center;
+  margin: auto;
+}
+
