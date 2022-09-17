@@ -1,7 +1,6 @@
 import {FC} from "react";
 import styles from "/src/styles/Footer.module.scss";
 import Image from "next/image";
-import logo from "/src/public/logo.svg"
 import Link from "next/link";
 import {
     IoLogoFacebook,
@@ -13,7 +12,7 @@ const Footer: FC = () => {
     return (
         <footer className={styles.main}>
             <Image
-                src={logo}
+                src="/public/logo.svg"
                 alt="Fylo Logo"
                 width={176}
                 height={152}

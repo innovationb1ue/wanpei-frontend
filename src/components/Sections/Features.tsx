@@ -1,7 +1,6 @@
 import Image from "next/image";
 import {createElement, FC} from "react";
 import styles from "@/styles/Sections/Features.module.scss";
-import anyFileIcon from "/src/public/icon-any-file.svg"
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 
@@ -41,7 +40,7 @@ export default Features;
 
 const elements = [
     {
-        image: anyFileIcon,
+        image: "/icon-security.svg",
         title: "Access your files, anywhere",
         text: `The ability to use a smartphone, tablet, or
     computer to access your account means your files follow you everywhere.`,

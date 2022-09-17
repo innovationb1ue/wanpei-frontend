@@ -1,6 +1,5 @@
 import Image from "next/image";
 import styles from "@/styles/Sections/Intro.module.scss";
-import illustration from "@/public/illustration-intro.png"
 import {Button} from "antd";
 
 const Intro = () => (
@@ -8,7 +7,7 @@ const Intro = () => (
         <Image
             width={720}
             height={534}
-            src={illustration}
+            src="/illustration-intro.png"
             alt=""
             objectFit="contain"
             priority

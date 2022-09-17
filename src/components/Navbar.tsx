@@ -1,7 +1,6 @@
 import Image from "next/image";
 import styles from "@/styles/Navbar.module.scss";
 import Link from "next/link";
-import logo from "/src/public/logo.svg"
 import React from "react";
 
 const Navbar: React.FC = (props, context) => {
@@ -11,7 +10,7 @@ const Navbar: React.FC = (props, context) => {
                 <a tabIndex={0} title="Go to the Homepage">
                     <Image
                         objectFit="contain"
-                        src={logo}
+                        src="/logo.svg"
                         width={80}
                         height={24}
                         alt="Fylo Logo"

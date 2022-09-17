@@ -16,31 +16,36 @@ import {ChangeEvent, FormEvent, useState} from "react";
 import {useFormControl} from "@mui/material";
 import Navbar from "@components/Navbar";
 import Copyright from "@components/CopyRight";
-
+import {router} from "next/client";
+import {useRouter} from "next/router";
 
 const theme = createTheme();
 
 const Register: React.FC = () => {
+    const router = useRouter()
     const [isLoading, setIsLoading] = useState(false)
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         setIsLoading(true)
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+        const registerCall = await fetch("/api/user/register", {method: "POST", body: data})
+        const registerResult = await registerCall.json() as API.baseResult<API.CurrentUser>
         setIsLoading(false)
+        if (registerResult.message === 'ok'){
+            await router.push("/match/index")
+        }else{
+            alert("Failed. Possibly due to repeated email. ")
+        }
     };
     const [input, setInput] = useState({
-        userAccount: "",
-        userPassword: "",
+        email: "",
+        password: "",
         confirmPassword: ""
     })
     const [error, setError] = useState({
-        userAccount: false,
-        userPassword: false,
-        confirmPassword: false
+        email: false,
+        password: false,
+        confirmPassword: false,
     })
     const msg = "两次输入的密码不一致"
     const [confirmHelper, setConfirmHelper] = useState( "")
@@ -57,7 +62,7 @@ const Register: React.FC = () => {
         setError( prev => {
             const errorStateObj = {...prev}
             if (evt.target.name === "confirmPassword"){
-                errorStateObj["confirmPassword"] = input.userPassword !== evt.target.value;
+                errorStateObj["confirmPassword"] = input.password !== evt.target.value;
                 if (errorStateObj["confirmPassword"]){
                     setConfirmHelper(msg)
                 }else{
@@ -97,19 +102,19 @@ const Register: React.FC = () => {
                             margin="normal"
                             required
                             fullWidth
-                            id="userAccount"
+                            id="email"
                             label="Email Address"
-                            name="userAccount"
+                            name="email"
                         />
                         <TextField
                             margin="normal"
                             required
                             fullWidth
-                            name="userPassword"
+                            name="password"
                             label="Password"
                             type="password"
-                            id="userPassword"
-                            error={error.userPassword}
+                            id="password"
+                            error={error.password}
                             onChange={onInputChange}
                         />
                         <TextField
@@ -131,6 +136,7 @@ const Register: React.FC = () => {
                             variant="contained"
                             sx={{mt: 3, mb: 1, fontSize:"1rem"}}
                             loading={isLoading}
+                            disabled={error.confirmPassword}
                         >
                             注册
                         </LoadingButton>

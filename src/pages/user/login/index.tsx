@@ -13,18 +13,36 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import Copyright from "@components/CopyRight";
+import {increment, selectCount} from "@features/counter/counterSlice";
+import {useRouter} from "next/router";
 
 
 const theme = createTheme();
 
 export default function SignIn() {
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const router = useRouter()
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+        JSON.stringify(Object.fromEntries(data));
+        const req = await fetch("/api/user/login", {method: "POST", body: JSON.stringify(Object.fromEntries(data)), headers: {
+                'Content-Type': 'application/json'
+            },})
+        const res = await req.json() as API.baseResult<any>
+        if (res.message !== "ok"){
+            alert("登陆错误")
+            return
+        }
+        const currentReq = await fetch("/api/user/current", {method: "GET"})
+        const currentRes = await currentReq.json() as API.baseResult<API.CurrentUser>
+
+        if (currentRes?.data?.["Gorm.Model"]?.ID !== undefined && currentRes?.data?.["Gorm.Model"]?.ID >= 0){
+            await router.replace("/match/index")
+            return
+        }else{
+            alert("登陆错误")
+        }
+
     };
 
     return (
@@ -85,7 +103,7 @@ export default function SignIn() {
                                 </Link>
                             </Grid>
                             <Grid item>
-                                <Link href="#" variant="body2">
+                                <Link href="/user/register" variant="body2">
                                     {"Don't have an account? Sign Up"}
                                 </Link>
                             </Grid>

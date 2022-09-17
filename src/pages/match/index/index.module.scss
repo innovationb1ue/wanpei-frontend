@@ -1,0 +1,28 @@
+.main{
+  padding: 10px;
+  display: flex;
+  flex-grow: 1;
+  height: 100vh;
+}
+
+.cardContainer{
+  margin-right: 10px;
+  width: 80%;
+  height: 100%;
+}
+
+.matchMakingContainer{
+  padding: 10px;
+  display: flex;
+}
+
+.matchMakingButton{
+  height: 100px;
+  background: linear-gradient(90deg, #7676be, #356ecd);
+  font-weight: bolder;
+}
+.matchMakingButton > p{
+  font-size: 25px;
+  color: white;
+
+}

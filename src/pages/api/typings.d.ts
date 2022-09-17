@@ -3,16 +3,21 @@
 
 declare namespace API {
     type CurrentUser = {
+        "Gorm.Model": {
+            ID: number;
+            CreatedAt: string;
+            UpdatedAt: string;
+            DeletedAt: string;
+        }
         id: number;
         username: string;
-        userAccount: string;
-        avatarUrl?: string;
+        avatar_url?: string;
         gender: number;
         phone: string;
         email: string;
-        userStatus: number;
-        userRole: number; // 用户角色 0-普通 1-管理员
-        createTime: Date;
+        user_status: number;
+        user_role: number; // 用户角色 0-普通 1-管理员
+        create_at: Date;
     };
 
     type baseResult<T> = {
