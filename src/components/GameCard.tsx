@@ -6,31 +6,33 @@ import React from "react";
 interface gameCardProps {
     gameName: string,
     description?: string,
-    gameIntId: number
+    gameIntId: number,
+    imgUrl: string,
+    onClick?: Function,
 }
 
-const GameCard = (props: gameCardProps) => {
+const GameCard: React.FC<gameCardProps> = (props: gameCardProps) => {
     return (
-        <>
-            <Card sx={{maxWidth: 345, cursor: "pointer"}} onClick={(evt) => {
-                console.log(evt)
-            }} >
-                <CardMedia
-                    component="img"
-                    height="140"
-                    src="/lizzard.png"
-                >
-                </CardMedia>
-                <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                        {props.gameName}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        {props.description}
-                    </Typography>
-                </CardContent>
-            </Card>
-        </>
+        <Card sx={{maxWidth: 345, cursor: "pointer", height: 300}} onClick={(evt => {
+            props.onClick?.(props.gameIntId)
+        })}>
+            <CardMedia
+                component="img"
+                height="66.6%"
+                src={props.imgUrl}
+            >
+            </CardMedia>
+            <CardContent sx={{maxHeight: "30%"}}>
+                <Typography gutterBottom variant="h5" component="div">
+                    {props.gameName}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                    {props.description}
+                </Typography>
+            </CardContent>
+            <CardActions>
+            </CardActions>
+        </Card>
     )
 }
 

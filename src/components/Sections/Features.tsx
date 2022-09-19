@@ -9,26 +9,26 @@ const Features: FC = () => {
     return (
         <section aria-label="Features" className={styles.main}>
             <Box sx={{flexGrow: 1}}>
-                <Grid  container spacing={2} sx={{flexDirection: "row"}}>
-                {elements.map(({image, text, title}, id) => {
-                    console.log(id)
-                    return (
-                        <Grid key={`Feature-${id}`} xs={6} item>
-                            <Image
-                                width={75}
-                                height={75}
-                                src={image}
-                                objectFit="contain"
-                                priority
-                                alt=""
-                            />
-                            {createElement(`h${1 + id}`, null, title)}
-                            <Box className = {styles.textBox}>
-                                <p>{text}</p>
-                            </Box>
-                        </Grid>
-                    );
-                })}
+                <Grid container spacing={2} sx={{flexDirection: "row"}}>
+                    {elements.map(({image, text, title}, id) => {
+                        console.log(id)
+                        return (
+                            <Grid key={`Feature-${id}`} xs={6} item>
+                                <Image
+                                    width={75}
+                                    height={75}
+                                    src={image}
+                                    objectFit="contain"
+                                    priority
+                                    alt=""
+                                />
+                                {createElement(`h${1 + id}`, null, title)}
+                                <Box className={styles.textBox}>
+                                    <p>{text}</p>
+                                </Box>
+                            </Grid>
+                        );
+                    })}
                 </Grid>
             </Box>
         </section>

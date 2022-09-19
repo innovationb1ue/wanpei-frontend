@@ -25,21 +25,23 @@ export default function SignIn() {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         JSON.stringify(Object.fromEntries(data));
-        const req = await fetch("/api/user/login", {method: "POST", body: JSON.stringify(Object.fromEntries(data)), headers: {
+        const req = await fetch("/api/user/login", {
+            method: "POST", body: JSON.stringify(Object.fromEntries(data)), headers: {
                 'Content-Type': 'application/json'
-            },})
+            },
+        })
         const res = await req.json() as API.baseResult<any>
-        if (res.message !== "ok"){
+        if (res.message !== "ok") {
             alert("登陆错误")
             return
         }
         const currentReq = await fetch("/api/user/current", {method: "GET"})
         const currentRes = await currentReq.json() as API.baseResult<API.CurrentUser>
 
-        if (currentRes?.data?.["Gorm.Model"]?.ID !== undefined && currentRes?.data?.["Gorm.Model"]?.ID >= 0){
+        if (currentRes?.data?.["Gorm.Model"]?.ID !== undefined && currentRes?.data?.["Gorm.Model"]?.ID >= 0) {
             await router.replace("/match/index")
             return
-        }else{
+        } else {
             alert("登陆错误")
         }
 

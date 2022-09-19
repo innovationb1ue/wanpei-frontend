@@ -31,9 +31,9 @@ const Register: React.FC = () => {
         const registerCall = await fetch("/api/user/register", {method: "POST", body: data})
         const registerResult = await registerCall.json() as API.baseResult<API.CurrentUser>
         setIsLoading(false)
-        if (registerResult.message === 'ok'){
+        if (registerResult.message === 'ok') {
             await router.push("/match/index")
-        }else{
+        } else {
             alert("Failed. Possibly due to repeated email. ")
         }
     };
@@ -48,7 +48,7 @@ const Register: React.FC = () => {
         confirmPassword: false,
     })
     const msg = "两次输入的密码不一致"
-    const [confirmHelper, setConfirmHelper] = useState( "")
+    const [confirmHelper, setConfirmHelper] = useState("")
 
     const onInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
         let {name, value} = evt.target
@@ -59,13 +59,13 @@ const Register: React.FC = () => {
         validateInput(evt)
     }
     const validateInput = (evt: ChangeEvent<HTMLInputElement>) => {
-        setError( prev => {
+        setError(prev => {
             const errorStateObj = {...prev}
-            if (evt.target.name === "confirmPassword"){
+            if (evt.target.name === "confirmPassword") {
                 errorStateObj["confirmPassword"] = input.password !== evt.target.value;
-                if (errorStateObj["confirmPassword"]){
+                if (errorStateObj["confirmPassword"]) {
                     setConfirmHelper(msg)
-                }else{
+                } else {
                     errorStateObj["confirmPassword"] = false
                     setConfirmHelper("")
                 }
@@ -75,7 +75,7 @@ const Register: React.FC = () => {
     }
 
     let formCtl = useFormControl()
-    if (formCtl){
+    if (formCtl) {
         formCtl.onFocus = () => console.log('focused')
     }
     return (
@@ -134,7 +134,7 @@ const Register: React.FC = () => {
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{mt: 3, mb: 1, fontSize:"1rem"}}
+                            sx={{mt: 3, mb: 1, fontSize: "1rem"}}
                             loading={isLoading}
                             disabled={error.confirmPassword}
                         >
