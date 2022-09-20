@@ -3,20 +3,24 @@ import Button from "@mui/material/Button";
 import {useEffect, useState} from "react";
 import {fetcher, useCurrentUser} from "@services/api";
 import {useRouter} from "next/router";
-import Grid from "@mui/material/Grid";
 import {Card, CardActions, CardContent, CardMedia, Divider} from "@mui/material";
-import image from "@/static/img.png"
-import Image from "next/image";
-import GameCard from "@components/GameCard";
+
 import Box from "@mui/material/Box";
 import styles from "./index.module.scss"
 import Typography from "@mui/material/Typography";
 import useSWR from "swr";
 import GameList from "@/components/Game/GameList";
+import {createSocket} from "dgram";
+import {io} from "socket.io-client";
+import {bool} from "prop-types";
+import socketMessage = SOCKET.socketMessage;
 
+
+let socket: WebSocket
 
 export default function Main() {
     const [selectedGames, setSelectedGames] = useState([])
+    const [token, setToken] = useState("")
     const router = useRouter()
     const {res, isLoading, isError} = useCurrentUser()
     if (!isLoading && !isError) {
@@ -31,6 +35,17 @@ export default function Main() {
         return
     }
 
+    const handleSocketMessage = (data: socketMessage) => {
+        // handle the Websocket meesage here
+        if (data.action === "close"){
+            console.log("server closing the socket")
+            socket.close()
+        }
+        if (data.action === "success"){
+            router.push("/match/success")
+        }
+    }
+
     const startMatchMaking = () => {
         fetch("/api/match/start", {
                 method: "POST", body: JSON.stringify(
@@ -39,7 +54,16 @@ export default function Main() {
                     'Content-Type': 'application/json',
                 }
             }
-        )
+        ).then(async res => {
+            const body = await res.json() as {message: string, data: string}
+            const token = body.data as string
+            setToken(body.data)
+            socket  = new WebSocket(`ws://localhost:8096/match/socket?auth=${token}`)
+            socket.onmessage = (ev => {
+                console.log(ev)
+                handleSocketMessage(JSON.parse(ev.data) as socketMessage)
+            })
+        })
     }
 
 

@@ -1,8 +1,8 @@
 import Image from "next/image";
 import styles from "@/styles/Sections/Intro.module.scss";
-import {Button} from "antd";
 import Link from "next/link";
 import {useRouter} from "next/router";
+import Button from "@mui/material/Button";
 
 const Intro = () => {
     const router = useRouter()

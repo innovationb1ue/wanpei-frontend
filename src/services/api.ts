@@ -13,7 +13,3 @@ export const useCurrentUser = () => {
     }
 }
 
-export const validateLoginState = () => {
-
-}
-
