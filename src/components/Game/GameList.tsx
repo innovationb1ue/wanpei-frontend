@@ -35,17 +35,17 @@ const GameList = (props: props) => {
     }
 
     if (data) {
-        const games = data.data as [{ game_name: string, game_description: string, id: number, img_url: string }]
+        const games = data.data as [{ game_name: string, game_description: string, ID: number, img_url: string }]
         return (
             <>
                 <Box className={styles.cardContainer}>
                     <Grid container spacing={3}>
                         {games.map((game) => {
                             return (
-                                <Grid item xs={2} key={game.id}
-                                      sx={{opacity: (selectedGame.indexOf(game.id) === -1 ? 0.7 : 1)}}>
+                                <Grid item xs={2} key={game.ID}
+                                      sx={{opacity: (selectedGame.indexOf(game.ID) === -1 ? 0.7 : 1)}}>
                                     <GameCard gameName={game.game_name} description={game.game_description}
-                                              gameIntId={game.id} imgUrl={"" || "/lizzard.png"}
+                                              gameIntId={game.ID} imgUrl={"" || "/lizzard.png"}
                                               onClick={handleClickGame}></GameCard>
                                 </Grid>
                             )

@@ -11,7 +11,6 @@ import Typography from "@mui/material/Typography";
 import useSWR from "swr";
 import GameList from "@/components/Game/GameList";
 import {createSocket} from "dgram";
-import {io} from "socket.io-client";
 import {bool} from "prop-types";
 import socketMessage = SOCKET.socketMessage;
 
