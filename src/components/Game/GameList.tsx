@@ -45,8 +45,8 @@ const GameList = (props: props) => {
                                 <Grid item xs={2} key={game.ID}
                                       sx={{opacity: (selectedGame.indexOf(game.ID) === -1 ? 0.7 : 1)}}>
                                     <GameCard gameName={game.game_name} description={game.game_description}
-                                              gameIntId={game.ID} imgUrl={"" || "/lizzard.png"}
-                                              onClick={handleClickGame}></GameCard>
+                                        gameIntId={game.ID} imgUrl={"" || "/lizzard.png"}
+                                        onClick={handleClickGame}/>
                                 </Grid>
                             )
                         })}

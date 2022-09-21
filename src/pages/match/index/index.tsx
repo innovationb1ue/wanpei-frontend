@@ -51,13 +51,13 @@ export default function Main() {
                     {"selectedGame": selectedGames}),
                 headers: {
                     'Content-Type': 'application/json',
-                }
+                },
             }
         ).then(async res => {
             const body = await res.json() as {message: string, data: string}
             const token = body.data as string
             setToken(body.data)
-            socket  = new WebSocket(`ws://localhost:8096/match/socket?auth=${token}`)
+            socket  = new WebSocket(`ws://${window.location.hostname}:8096/match/socket?auth=${token}`)
             socket.onmessage = (ev => {
                 console.log(ev)
                 handleSocketMessage(JSON.parse(ev.data) as socketMessage)
