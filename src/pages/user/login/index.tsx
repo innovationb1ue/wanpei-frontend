@@ -13,14 +13,29 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import Copyright from "@components/CopyRight";
-import {increment, selectCount} from "@features/counter/counterSlice";
 import {useRouter} from "next/router";
+import {useCurrentUser} from "@services/api";
+import {Alert, Snackbar} from "@mui/material";
+import {useState} from "react";
 
 
 const theme = createTheme();
 
 export default function SignIn() {
     const router = useRouter()
+    const [loginErrorOpen, setLoginErrorOpen] = useState(false)
+    // todo: abstract current user to global state.
+    const {res, isLoading, isError} = useCurrentUser()
+    if (!isLoading && !isError) {
+        const user = res.data as API.CurrentUser
+        if (user !== undefined && user?.["Gorm.Model"]?.ID > 0) {
+            router.push("/match/index")
+    }}
+    if (isLoading) {
+        return
+    }
+
+
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -32,7 +47,7 @@ export default function SignIn() {
         })
         const res = await req.json() as API.baseResult<any>
         if (res.message !== "ok") {
-            alert("登陆错误")
+            setLoginErrorOpen(true)
             return
         }
         const currentReq = await fetch("/api/user/current", {method: "GET"})
@@ -42,7 +57,7 @@ export default function SignIn() {
             await router.replace("/match/index")
             return
         } else {
-            alert("登陆错误")
+
         }
 
     };
@@ -114,6 +129,14 @@ export default function SignIn() {
                 </Box>
                 <Copyright sx={{mt: 8, mb: 4}}/>
             </Container>
+            <Snackbar open={loginErrorOpen} autoHideDuration={4000} anchorOrigin={{vertical: "top", horizontal: "center"}} onClose={(event?: React.SyntheticEvent | Event, reason?: string) => {
+                if (reason === 'clickaway') {
+                    return;
+                }setLoginErrorOpen(false);}}
+                      sx={{marginTop: 0, opacity: 0.9}}
+            >
+                <Alert severity={"error"}> Wrong password or user not exist</Alert>
+            </Snackbar>
         </ThemeProvider>
     );
 }
