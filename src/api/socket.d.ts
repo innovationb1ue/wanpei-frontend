@@ -1,19 +1,21 @@
 import { string } from "prop-types";
 
 declare namespace SOCKET {
-  type socketMessage<T = string> = {
+  export type socketMessage<T = string> = {
     action: string;
     data: T;
-    message: string;
+    message?: string;
   };
 
-  type chatMessage = {
+  // for self send message, no sender should be provided since it should be determined by server
+  // for receiving message, sender will be provided by the server
+  export type chatMessage = {
     text: string;
-    sender: string;
+    sender?: string;
   };
 
-  type chatSocketMessage = {
+  export interface chatSocketMessage extends socketMessage {
     action: string;
     data: chatMessage;
-  };
+  }
 }

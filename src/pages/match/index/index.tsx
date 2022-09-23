@@ -55,7 +55,7 @@ export default function Main() {
         const body = (await res.json()) as { message: string; data: string };
         const token = body.data as string;
         socket = new WebSocket(
-          `ws://${window.location.hostname}:8096/match/socket?auth=${token}`
+          `ws://${window.location.hostname}:8096/match/socket?auth=${token}&selectedGame=${selectedGames}`
         );
         socket.onmessage = (ev) => {
           console.log(ev);

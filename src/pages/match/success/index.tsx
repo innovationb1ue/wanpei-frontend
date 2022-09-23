@@ -1,6 +1,5 @@
 import { NextRouter, useRouter, withRouter } from "next/router";
 import React, { Component, createRef } from "react";
-import { useReducerWithReduxDevtools } from "next/dist/client/components/use-reducer-with-devtools";
 import { string } from "prop-types";
 import { SOCKET } from "@api/socket";
 import { TextField } from "@mui/material";
@@ -49,11 +48,14 @@ class Success extends Component<Props, States> {
   }
 
   sendMessage(msg: string) {
-    socket?.send(msg);
+    const chatMsg: SOCKET.chatSocketMessage = {
+      action: "message",
+      data: { text: msg },
+    };
+    socket?.send(JSON.stringify(chatMsg));
   }
 
   componentDidUpdate() {
-    // todo: fix logic here. this do not trigger when push to this page
     console.log("did update");
     if (!this.state.connected) {
       const router = this.props.router;
@@ -72,6 +74,11 @@ class Success extends Component<Props, States> {
         connected: true,
       });
     }
+  }
+
+  componentDidMount() {
+    // trigger an update, so we can take router.query object and establish Websocket connection.
+    this.forceUpdate();
   }
 
   render() {
@@ -96,12 +103,10 @@ class Success extends Component<Props, States> {
               width: "100%",
             }}
           >
-            123 123
-            <p>456</p>
             {this.state.messages.map((val, idx) => {
               return (
                 <>
-                  <p key={idx}>val.text</p>
+                  <p key={idx}>{val.text}</p>
                 </>
               );
             })}
