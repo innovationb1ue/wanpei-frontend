@@ -1,6 +1,5 @@
 import {Card, CardActions, CardContent, CardMedia} from "@mui/material";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import React from "react";
 
 interface gameCardProps {
@@ -13,9 +12,10 @@ interface gameCardProps {
 
 const GameCard: React.FC<gameCardProps> = (props: gameCardProps) => {
     return (
-        <Card sx={{maxWidth: 345, cursor: "pointer", height: 300}} onClick={(evt => {
-            props.onClick?.(props.gameIntId)
-        })}>
+        <Card sx={{maxWidth: 345, cursor: "pointer", height: 300, overflow: "hidden"}}
+              onClick={(evt => {
+                  props.onClick?.(props.gameIntId)
+              })}>
             <CardMedia
                 component="img"
                 height="66.6%"

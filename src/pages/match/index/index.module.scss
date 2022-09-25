@@ -1,8 +1,9 @@
 .main {
   padding: 10px;
   display: flex;
+  background-color: rgb(46, 21, 53, 0.32);
+  color: brown;
   flex-grow: 1;
-  height: 100vh;
 }
 
 .cardContainer {
@@ -14,16 +15,44 @@
 .matchMakingContainer {
   padding: 10px;
   display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+}
+
+.matchMakingTopEle {
+  text-align: center;
+  height: 5%;
+  align-items: center;
+  display: flex;
+}
+
+.matchMakingMiddleEle {
+  text-align: left;
+  flex-grow: 1;
+}
+
+.matchMakingBottomEle {
+  height: 100px;
+  font-weight: bolder;
+  border-radius: 100%;
+  display: flex;
 }
 
 .matchMakingButton {
   height: 100px;
+  width: 100px;
   background: linear-gradient(90deg, #7676be, #356ecd);
   font-weight: bolder;
+  border-radius: 50%;
+  margin: auto;
 }
 
 .matchMakingButton > p {
-  font-size: 25px;
+  font-size: 20px;
   color: white;
+}
 
+.matchMakingTitle {
+  margin-left: 0;
+  font-size: 40px;
 }
