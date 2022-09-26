@@ -12,6 +12,7 @@ declare namespace API {
         id: number;
         username: string;
         avatar_url?: string;
+        nickname: string
         gender: number;
         phone: string;
         email: string;

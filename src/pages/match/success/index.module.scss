@@ -1,0 +1,41 @@
+
+.leftContainer {
+  height: 100%;
+  margin: 5px;
+  width: 80vw;
+  display: flex;
+  flex-direction: column;
+  max-width: 80vw;
+  overflow: auto;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+.rightContainer {
+  width: 10vw;
+  max-width: 20vw;
+  flex-grow: 1;
+  right: 0;
+}
+
+.sendMessageBtn {
+  margin: auto 0 auto auto;
+  height: 50px;
+  align-self: auto;
+  left: 0px;
+  background: linear-gradient(90deg, #bebeed, #356ecd);
+  color: #111111;
+
+  > p {
+    color: #111111;
+    width: 80px;
+  }
+}
+
+.messageArea {
+  border-style: groove;
+  height: 50%;
+  flex-grow: 1;
+  flex-direction: column;
+  overflow: auto;
+}

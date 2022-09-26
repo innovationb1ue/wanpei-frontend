@@ -36,6 +36,7 @@
   font-weight: bolder;
   border-radius: 100%;
   display: flex;
+  justify-content: center;
 }
 
 .matchMakingButton {
@@ -45,12 +46,13 @@
   font-weight: bolder;
   border-radius: 50%;
   margin: auto;
+
+  > p {
+    font-size: 20px;
+    color: white;
+  }
 }
 
-.matchMakingButton > p {
-  font-size: 20px;
-  color: white;
-}
 
 .matchMakingTitle {
   margin-left: 0;

@@ -1,136 +1,159 @@
-import { NextRouter, useRouter, withRouter } from "next/router";
-import React, { Component, createRef } from "react";
-import { string } from "prop-types";
-import { SOCKET } from "@api/socket";
-import { TextField } from "@mui/material";
+import {NextRouter, withRouter} from "next/router";
+import React, {Component} from "react";
+import {SOCKET} from "@api/socket";
+import {linearProgressClasses, TextField} from "@mui/material";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import ChatMessage from "@components/Chat/ChatMessage";
+import Container from "@mui/material/Container";
+import styles from "./index.module.scss";
+import {difference} from "next/dist/build/utils";
+import {list} from "postcss";
+import ChatUserList from "@components/Chat/ChatUserList";
 
 let socket: WebSocket;
 
 interface WithRouterProps {
-  router: NextRouter;
+    router: NextRouter;
 }
-interface Props extends WithRouterProps {}
+
+interface Props extends WithRouterProps {
+}
 
 interface States {
-  connected: boolean;
-  messages: SOCKET.chatMessage[];
+    messages: SOCKET.chatMessage[];
 }
 
 class Success extends Component<Props, States> {
-  private messageInput: string;
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      connected: false,
-      messages: [],
-    };
-    this.messageInput = "";
-  }
+    private once: boolean;
+    private inputRef: React.RefObject<any>;
+    private socket: WebSocket | undefined;
+    private listeners: any[];
 
-  // todo: abstract and typing all the messages.
-  // This is really bad implementation at the moment just to make things work.
-  handleSocketMessage(message: SOCKET.chatSocketMessage) {
-    switch (message.action) {
-      case "default":
-        console.log(message);
-        break;
-      case "message":
-        const data = message.data;
-        if (!data) return;
-        this.setState<"messages">((prevState: States, msg) => {
-          return {
-            messages: prevState.messages.concat({ ...message.data }),
-          };
+    constructor(props: any) {
+        super(props);
+        this.state = {
+            messages: [],
+        };
+        this.once = false;
+        this.inputRef = React.createRef();
+        this.socket = undefined;
+        this.listeners = [];
+    }
+
+    // This is awful implementation at the moment just to make things work.
+    handleSocketMessage(message: SOCKET.chatSocketMessage) {
+        switch (message.action) {
+            case "message":
+                const data = message.data;
+                if (!data) return;
+                this.setState<"messages">((prevState: States, msg) => {
+                    return {
+                        messages: prevState.messages.concat({...message.data}),
+                    };
+                });
+                break;
+        }
+    }
+
+    sendMessage = (msg: string) => {
+        const chatMsg: SOCKET.chatSocketMessage = {
+            action: "message",
+            data: {text: msg},
+        };
+        socket?.send(JSON.stringify(chatMsg));
+    };
+
+    // the event handler for global keyboard event
+    keyDownEventHandler = (evt: KeyboardEvent) => {
+        if (evt.key === "Enter") {
+            this.SendClicked();
+        }
+    };
+
+    componentDidUpdate(prevP: Props, prevS: States) {
+        //  this.once flag make sure codes below are executed exactly once.
+        if (!this.once && this.props.router.isReady) {
+            const router = this.props.router;
+            const ID = router.query.ID;
+
+            socket = new WebSocket(
+                `ws://${window.location.hostname}:8096/hub?ID=${ID}`
+            );
+            socket.onmessage = (ev) => {
+                this.handleSocketMessage(
+                    JSON.parse(ev.data) as SOCKET.chatSocketMessage
+                );
+            };
+            this.socket = socket;
+            const ObjThis = this;
+            window.addEventListener(
+                "keydown",
+                this.keyDownEventHandler // bind to this component to access attrs
+            );
+            this.listeners.push(this.keyDownEventHandler);
+            console.log("call updated once");
+            this.once = true;
+        }
+    }
+
+    // handle the click event of message sending button.
+    SendClicked = () => {
+        this.sendMessage(this.inputRef.current.value);
+        this.inputRef.current.value = ""; // empty the input
+        this.inputRef.current.focus();
+    };
+
+    componentDidMount() {
+        // trigger an update, so we can use router.query object and do things.
+        this.forceUpdate();
+    }
+
+    componentWillUnmount() {
+        this.listeners.map((listener: any) => {
+            window.removeEventListener("keydown", listener);
+            console.log("unmount one");
         });
     }
-  }
 
-  sendMessage(msg: string) {
-    const chatMsg: SOCKET.chatSocketMessage = {
-      action: "message",
-      data: { text: msg },
-    };
-    socket?.send(JSON.stringify(chatMsg));
-  }
+    render() {
+        return (
+            <Box sx={{display: "flex", justifyContent: "center", padding: "5px", height: "100vh", width: "100vw"}}>
+                <Box className={styles.leftContainer}>
+                    <Box className={styles.messageArea}>
+                        {this.state.messages.map((val, idx) => {
+                            return (
+                                <ChatMessage
+                                    name={val.sender || "**"}
+                                    message={val.text}
+                                    key={idx}
+                                />
+                            );
+                        })}
+                    </Box>
 
-  componentDidUpdate() {
-    console.log("did update");
-    if (!this.state.connected) {
-      const router = this.props.router;
-      const ID = router.query.ID;
-      socket = new WebSocket(
-        `ws://${window.location.hostname}:8096/hub?ID=${ID}`
-      );
-      console.log(socket);
-      socket.onmessage = (ev) => {
-        console.log(ev);
-        this.handleSocketMessage(
-          JSON.parse(ev.data) as SOCKET.chatSocketMessage
+                    <Box display={"flex"} marginTop={"10px"}>
+                        <TextField
+                            label={"Message"}
+                            sx={{flexGrow: 1, marginRight: "10px"}}
+                            id={"messageField"}
+                            inputRef={this.inputRef} // use ref to access value
+                        />
+                        <Button
+                            onClick={() => this.SendClicked()}
+                            className={styles.sendMessageBtn}
+                        >
+                            <p>发送消息</p>
+                        </Button>
+                    </Box>
+                </Box>
+
+                <Box className={styles.rightContainer}>
+                    <ChatUserList/>
+                </Box>
+            </Box>
         );
-      };
-      this.setState({
-        connected: true,
-      });
     }
-  }
-
-  componentDidMount() {
-    // trigger an update, so we can take router.query object and establish Websocket connection.
-    this.forceUpdate();
-  }
-
-  render() {
-    return (
-      <>
-        <Box
-          display={"flex"}
-          flexDirection={"column"}
-          sx={{
-            height: "100vh",
-            padding: "10%",
-            justifyContent: "center",
-            marginTop: 5,
-          }}
-        >
-          <Box
-            sx={{
-              borderStyle: "solid",
-              height: "50%",
-              flexGrow: 1,
-              flexDirection: "column",
-              width: "100%",
-            }}
-          >
-            {this.state.messages.map((val, idx) => {
-              return (
-                <>
-                  <p key={idx}>{val.text}</p>
-                </>
-              );
-            })}
-          </Box>
-
-          <TextField
-            label={"Message"}
-            sx={{ margin: "auto" }}
-            id={"messageField"}
-            onChange={(evt) => {
-              this.messageInput = evt.target.value;
-            }}
-          />
-          <Button onClick={() => this.sendMessage(this.messageInput)}>
-            Submit
-          </Button>
-        </Box>
-      </>
-    );
-  }
 }
 
 export default withRouter(Success);
-
-export function getStaticProps() {
-  return { props: { a: "b" } };
-}

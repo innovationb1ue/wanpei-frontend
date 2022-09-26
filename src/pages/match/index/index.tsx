@@ -1,6 +1,6 @@
 // the index page of match making
 import Button from "@mui/material/Button";
-import React, {useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {useCurrentUser} from "@services/api";
 import {useRouter} from "next/router";
 import {Divider, FormControl, FormGroup} from "@mui/material";
@@ -13,18 +13,32 @@ import {SOCKET} from "@api/socket";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import CustomizedTabs from "@components/Tabs";
+import baseResult = API.baseResult;
 
-let socket: WebSocket;
+let socket: WebSocket | undefined;
 
 export default function Main() {
-    const [checked, setChecked] = useState({ck1: false, ck2: true})
-    const [selectedGames, setSelectedGames] = useState([]);
     const router = useRouter();
+    // checkbox state in menu
+    const [checked, setChecked] = useState({ck1: false, ck2: true});
+    // the start matching button text
+    const [matchBtnText, setMatchBtnText] = useState("开始匹配")
+    // MatchMaking button status
+    const [isDisabled, setIsDisabled] = useState(false)
+    // flag for doing match making.
+    const [isMatching, setIsMatching] = useState(false)
+    // state for selected game card
+    const [selectedGames, setSelectedGames] = useState([]);
+    // variate the btn text when matching status changed
+    useEffect(() => {
+        setMatchBtnText(isMatching ? "取消匹配" : "开始匹配")
+    }, [isMatching])
+    
+    // login status check
     const {res, isLoading, isError} = useCurrentUser();
     if (!isLoading && !isError) {
         const user = res.data as API.CurrentUser;
         if (user === undefined || user?.["Gorm.Model"]?.ID < 0) {
-            console.log("pushed");
             router.push("/user/login");
             return;
         }
@@ -34,12 +48,12 @@ export default function Main() {
     }
 
     // handle the Websocket message here
-    // todo: abstract this ugly thing..
     const handleSocketMessage = (data: SOCKET.socketMessage<{ ID: string }>) => {
+        console.log(data)
         switch (data.action) {
             case "close":
                 console.log("server closing the socket");
-                socket.close();
+                socket?.close();
                 return;
             case "success":
                 const roomID = data.data.ID;
@@ -47,32 +61,61 @@ export default function Main() {
         }
     };
 
-    const startMatchMaking = () => {
-        fetch("/api/match/start", {
-            method: "POST",
-            body: JSON.stringify({selectedGame: selectedGames}),
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-            .then(async (res) => {
-                const body = (await res.json()) as { message: string; data: string };
-                const token = body.data as string;
-                socket = new WebSocket(
-                    `ws://${window.location.hostname}:8096/match/socket?auth=${token}&selectedGame=${selectedGames}`
-                );
-                socket.onmessage = (ev) => {
-                    console.log(ev);
-                    handleSocketMessage(JSON.parse(ev.data));
-                };
+    const clickedMatchBtn = () => {
+        if (!isMatching) {
+            fetch("/api/match/start", {
+                method: "POST",
+                body: JSON.stringify({selectedGame: selectedGames}),
+                headers: {
+                    "Content-Type": "application/json",
+                },
             })
-            .catch((e) => {
-                throw e;
-            });
+                .then(async (res) => {
+                    const body = (await res.json()) as { message: string; data: string };
+                    const token = body.data as string;
+                    socket = new WebSocket(
+                        `ws://${window.location.hostname}:8096/match/socket?auth=${token}&selectedGame=${selectedGames}`
+                    );
+                    socket.onmessage = (ev) => {
+                        handleSocketMessage(JSON.parse(ev.data));
+                    };
+                    setIsMatching(true)
+                })
+                .catch((e) => {
+                    throw e;
+                });
+        } else {
+            // Debounce the button when performing request.
+            setIsDisabled(true)
+            fetch("/api/match/stop", {method: "POST"}).then(async (r) => {
+                console.log(r)
+                const res = await r.json() as baseResult<undefined>
+                if (res.code === 1) {
+                    socket?.close(1000) // normal closure
+                    setIsMatching(false)
+                    socket = undefined
+                    setIsDisabled(false)
+                } else {
+                    console.log(res.code)
+                }
+            }).catch((res) => {
+                console.log(res)
+                setIsDisabled(false)
+            })
+        }
+
     };
 
     return (
-        <Box sx={{width: "100vw", height: '100vh', display: "flex", flexDirection: 'column'}}>
+        <Box
+            sx={{
+                width: "100vw",
+                height: "100vh",
+                display: "flex",
+                flexDirection: "column",
+            }}
+        >
+            {/* Navbar */}
             <CustomizedTabs/>
             <Box className={styles.main}>
                 {/* card list */}
@@ -91,23 +134,29 @@ export default function Main() {
                     <Box className={styles.matchMakingMiddleEle}>
                         <FormControl>
                             <FormGroup color={"white"}>
-                                <FormControlLabel control={<Checkbox checked={checked.ck1}/>}
-                                                  checked={checked.ck1}
-                                                  onChange={(event: React.SyntheticEvent, checked) => {
-                                                      setChecked((old) => {
-                                                          return {...old, ck1: checked}
-                                                      });
-                                                      console.log(`ck1 = ${checked}`)
-                                                  }}
-                                                  label="Label"/>
+                                <FormControlLabel
+                                    control={<Checkbox checked={checked.ck1}/>}
+                                    checked={checked.ck1}
+                                    onChange={(event: React.SyntheticEvent, checked) => {
+                                        setChecked((old) => {
+                                            return {...old, ck1: checked};
+                                        });
+                                        console.log(`ck1 = ${checked}`);
+                                    }}
+                                    label="Label"
+                                />
                             </FormGroup>
                         </FormControl>
 
-                        <Typography>Place holder </Typography>
                     </Box>
                     <Box className={styles.matchMakingBottomEle}>
-                        <Button onClick={startMatchMaking} className={styles.matchMakingButton}>
-                            <p>开始匹配</p>
+                        <Button
+                            onClick={clickedMatchBtn}
+                            className={styles.matchMakingButton}
+                            sx={{borderRadius: "50%"}}
+                            disabled={isDisabled}
+                        >
+                            <p>{matchBtnText}</p>
                         </Button>
                     </Box>
                 </Box>

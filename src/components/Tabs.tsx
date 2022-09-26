@@ -1,9 +1,10 @@
-import {Tab, Tabs} from "@mui/material";
-import {styled} from '@mui/material/styles';
-import React from "react";
+import {Tab, Tabs, Theme} from "@mui/material";
+import {styled} from "@mui/material/styles";
+import React, {useEffect} from "react";
 import Box from "@mui/material/Box";
 import {useRouter} from "next/router";
-
+import {SxProps} from "@mui/system";
+import Link from "@mui/material/Link";
 
 interface StyledTabsProps {
     children?: React.ReactNode;
@@ -14,18 +15,18 @@ interface StyledTabsProps {
 const StyledTabs = styled((props: StyledTabsProps) => (
     <Tabs
         {...props}
-        TabIndicatorProps={{children: <span className="MuiTabs-indicatorSpan"/>}}
+        TabIndicatorProps={{children: <Link className="MuiTabs-indicatorSpan"/>}}
     />
 ))({
-    '& .MuiTabs-indicator': {
-        display: 'flex',
-        justifyContent: 'center',
-        backgroundColor: 'transparent',
+    "& .MuiTabs-indicator": {
+        display: "flex",
+        justifyContent: "center",
+        backgroundColor: "transparent",
     },
-    '& .MuiTabs-indicatorSpan': {
+    "& .MuiTabs-indicatorSpan": {
         maxWidth: 40,
-        width: '100%',
-        backgroundColor: '#635ee7',
+        width: "100%",
+        backgroundColor: "#635ee6",
     },
 });
 
@@ -36,38 +37,48 @@ interface StyledTabProps {
 const StyledTab = styled((props: StyledTabProps) => (
     <Tab disableRipple {...props} />
 ))(({theme}) => ({
-    textTransform: 'none',
+    textTransform: "none",
     fontWeight: theme.typography.fontWeightRegular,
     fontSize: theme.typography.pxToRem(15),
     marginRight: theme.spacing(1),
-    color: 'rgba(255, 255, 255, 0.7)',
-    '&.Mui-selected': {
-        color: '#fff',
+    color: "rgba(255, 255, 255, 0.7)",
+    "&.Mui-selected": {
+        color: "#fff",
     },
-    '&.Mui-focusVisible': {
-        backgroundColor: 'rgba(100, 95, 228, 0.32)',
+    "&.Mui-focusVisible": {
+        backgroundColor: "rgba(100, 95, 228, 0.32)",
     },
 }));
 
 interface CustomizedTabsProps {
-    currentActiveIdx?: number
+    currentActiveIdx?: number;
 }
 
 const CustomizedTabs = ({currentActiveIdx}: CustomizedTabsProps) => {
-    const [value, setValue] = React.useState(currentActiveIdx ? currentActiveIdx : 0);
-    const router = useRouter()
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-        setValue(newValue);
-        if (newValue === 1) {
-            router.push("/match/personal")
-        } else if (newValue === 0) {
-            router.push("/match/index")
+    const [value, setValue] = React.useState(
+        currentActiveIdx ? currentActiveIdx : 0
+    );
+    const router = useRouter();
+    const handleChange = (event: React.SyntheticEvent, idx: number) => {
+        setValue(idx);
+        event.preventDefault();
+        switch (idx) {
+            case 0:
+                router.push("/match/index");
+                break;
+            case 1:
+                router.push("/user/personal");
+                break;
+            case 3:
+                fetch("/api/user/logout").then((res: Response) => {
+                });
+                location.href = "/user/login";
         }
     };
 
     return (
-        <Box sx={{width: '100%'}}>
-            <Box sx={{bgcolor: '#2e1534'}}>
+        <Box sx={{width: "100%"}}>
+            <Box sx={{bgcolor: "#2e1534"}}>
                 <StyledTabs
                     value={value}
                     onChange={handleChange}
@@ -75,10 +86,20 @@ const CustomizedTabs = ({currentActiveIdx}: CustomizedTabsProps) => {
                 >
                     <StyledTab label="玩家匹配"/>
                     <StyledTab label="个人中心"/>
+                    <Tab
+                        sx={{
+                            flexGrow: 1,
+                            maxWidth: "100vw",
+                            minWidth: 0,
+                            margin: 0,
+                            padding: 0,
+                        }}
+                    />
+                    <StyledTab label="退出登陆"/>
                 </StyledTabs>
             </Box>
         </Box>
     );
-}
+};
 
-export default CustomizedTabs
+export default CustomizedTabs;
