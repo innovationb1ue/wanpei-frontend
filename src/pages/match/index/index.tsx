@@ -1,6 +1,6 @@
 // the index page of match making
 import Button from "@mui/material/Button";
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useCurrentUser} from "@services/api";
 import {useRouter} from "next/router";
 import {Divider, FormControl, FormGroup} from "@mui/material";
@@ -9,7 +9,6 @@ import Box from "@mui/material/Box";
 import styles from "./index.module.scss";
 import Typography from "@mui/material/Typography";
 import GameList from "@/components/Game/GameList";
-import {SOCKET} from "@api/socket";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import CustomizedTabs from "@components/Tabs";
@@ -33,7 +32,7 @@ export default function Main() {
     useEffect(() => {
         setMatchBtnText(isMatching ? "取消匹配" : "开始匹配")
     }, [isMatching])
-    
+
     // login status check
     const {res, isLoading, isError} = useCurrentUser();
     if (!isLoading && !isError) {
@@ -152,7 +151,7 @@ export default function Main() {
                     <Box className={styles.matchMakingBottomEle}>
                         <Button
                             onClick={clickedMatchBtn}
-                            className={styles.matchMakingButton}
+                            className={isMatching ? styles.DoingMatchMaking : styles.matchMakingButton}
                             sx={{borderRadius: "50%"}}
                             disabled={isDisabled}
                         >

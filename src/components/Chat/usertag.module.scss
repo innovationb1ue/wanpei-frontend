@@ -1,0 +1,10 @@
+.tag {
+  display: flex;
+  margin: auto;
+  justify-content: left;
+
+  > p {
+    margin: auto;
+    font-size: 25px;
+  }
+}

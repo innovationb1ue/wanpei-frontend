@@ -72,7 +72,8 @@ const CustomizedTabs = ({currentActiveIdx}: CustomizedTabsProps) => {
             case 3:
                 fetch("/api/user/logout").then((res: Response) => {
                 });
-                location.href = "/user/login";
+                document.cookie = "wanpei-session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                document.location.href = "/user/login";
         }
     };
 

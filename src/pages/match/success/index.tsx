@@ -1,14 +1,10 @@
 import {NextRouter, withRouter} from "next/router";
 import React, {Component} from "react";
-import {SOCKET} from "@api/socket";
-import {linearProgressClasses, TextField} from "@mui/material";
+import {TextField} from "@mui/material";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import ChatMessage from "@components/Chat/ChatMessage";
-import Container from "@mui/material/Container";
 import styles from "./index.module.scss";
-import {difference} from "next/dist/build/utils";
-import {list} from "postcss";
 import ChatUserList from "@components/Chat/ChatUserList";
 
 let socket: WebSocket;
@@ -22,6 +18,7 @@ interface Props extends WithRouterProps {
 
 interface States {
     messages: SOCKET.chatMessage[];
+    HubID: string;
 }
 
 class Success extends Component<Props, States> {
@@ -29,16 +26,19 @@ class Success extends Component<Props, States> {
     private inputRef: React.RefObject<any>;
     private socket: WebSocket | undefined;
     private listeners: any[];
+    private user: API.CurrentUser | undefined;
 
     constructor(props: any) {
         super(props);
         this.state = {
             messages: [],
+            HubID: "",
         };
         this.once = false;
         this.inputRef = React.createRef();
         this.socket = undefined;
         this.listeners = [];
+        this.user = undefined
     }
 
     // This is awful implementation at the moment just to make things work.
@@ -46,6 +46,7 @@ class Success extends Component<Props, States> {
         switch (message.action) {
             case "message":
                 const data = message.data;
+                console.log(data)
                 if (!data) return;
                 this.setState<"messages">((prevState: States, msg) => {
                     return {
@@ -59,7 +60,7 @@ class Success extends Component<Props, States> {
     sendMessage = (msg: string) => {
         const chatMsg: SOCKET.chatSocketMessage = {
             action: "message",
-            data: {text: msg},
+            data: {text: msg, sender: this.user?.nickname ?? ""}
         };
         socket?.send(JSON.stringify(chatMsg));
     };
@@ -71,11 +72,29 @@ class Success extends Component<Props, States> {
         }
     };
 
+
     componentDidUpdate(prevP: Props, prevS: States) {
         //  this.once flag make sure codes below are executed exactly once.
         if (!this.once && this.props.router.isReady) {
+            // login status check
+            fetch("/api/user/current").then(async (res) => {
+                const resJson = (await res.json()) as API.baseResult<API.CurrentUser>;
+                const user = resJson.data;
+                console.log(user?.["Gorm.Model"]?.ID);
+                if (!user?.["Gorm.Model"]?.ID || user?.["Gorm.Model"]?.ID < 0) {
+                    console.log("should push to login");
+                    await this.props.router.push("/user/login");
+                } else {
+                    this.user = user
+                }
+            });
             const router = this.props.router;
-            const ID = router.query.ID;
+            const ID = router.query.ID as string;
+            this.setState<"HubID">((prevState: States, msg) => {
+                return {
+                    HubID: ID,
+                };
+            });
 
             socket = new WebSocket(
                 `ws://${window.location.hostname}:8096/hub?ID=${ID}`
@@ -118,7 +137,15 @@ class Success extends Component<Props, States> {
 
     render() {
         return (
-            <Box sx={{display: "flex", justifyContent: "center", padding: "5px", height: "100vh", width: "100vw"}}>
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    padding: "5px",
+                    height: "100vh",
+                    width: "100vw",
+                }}
+            >
                 <Box className={styles.leftContainer}>
                     <Box className={styles.messageArea}>
                         {this.state.messages.map((val, idx) => {
@@ -132,12 +159,13 @@ class Success extends Component<Props, States> {
                         })}
                     </Box>
 
-                    <Box display={"flex"} marginTop={"10px"}>
+                    <Box display={"flex"} marginTop={"10px"} marginBottom={"20px"}>
                         <TextField
                             label={"Message"}
                             sx={{flexGrow: 1, marginRight: "10px"}}
                             id={"messageField"}
                             inputRef={this.inputRef} // use ref to access value
+                            autoComplete={"off"}
                         />
                         <Button
                             onClick={() => this.SendClicked()}
@@ -149,7 +177,7 @@ class Success extends Component<Props, States> {
                 </Box>
 
                 <Box className={styles.rightContainer}>
-                    <ChatUserList/>
+                    <ChatUserList HubID={this.state.HubID}/>
                 </Box>
             </Box>
         );

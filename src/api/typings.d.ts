@@ -13,12 +13,12 @@ declare namespace API {
         username: string;
         avatar_url?: string;
         nickname: string
+        steam_code: string
         gender: number;
         phone: string;
         email: string;
         user_status: number;
         user_role: number; // 用户角色 0-普通 1-管理员
-        create_at: Date;
     };
 
     type baseResult<T> = {
