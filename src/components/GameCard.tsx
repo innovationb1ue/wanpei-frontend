@@ -18,12 +18,12 @@ const GameCard: React.FC<gameCardProps> = (props: gameCardProps) => {
               })}>
             <CardMedia
                 component="img"
-                height="66.6%"
+                height="60.6%"
                 src={props.imgUrl}
             >
             </CardMedia>
             <CardContent sx={{maxHeight: "30%"}}>
-                <Typography gutterBottom variant="h5" component="div">
+                <Typography gutterBottom variant="h6" component="div">
                     {props.gameName}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">

@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import UserTag from "@components/Chat/UserTag";
 import useSWR from "swr";
 import {fetcher} from "@services/api";
+import {useRouter} from "next/router";
 
 
 interface userListInterface {
@@ -16,6 +17,7 @@ const ChatUserList: React.FC<{ HubID: string }> = (
     props,
     context
 ) => {
+    const router = useRouter()
     const {
         data,
         error
@@ -31,6 +33,10 @@ const ChatUserList: React.FC<{ HubID: string }> = (
     }
     console.log(data)
     const userList = data.data as userListInterface[]
+    if (data && !error && userList === undefined) {
+        router.push("/match/index")
+        return <></>
+    }
     return (
         <Box sx={{overflow: "scroll", overflowY: "hidden"}}>
             {

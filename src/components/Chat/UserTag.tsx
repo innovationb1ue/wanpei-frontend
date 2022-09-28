@@ -20,7 +20,7 @@ const UserTag = ({nickname, steam_code, description}: UserTagProps): JSX.Element
             <Tooltip title={<UserCard nickname={nickname} steam_code={steam_code} description={description}/>}
                      placement={"top"}
                      sx={{fontSize: "25px", padding: "0"}}
-                     enterDelay={500} leaveDelay={200}>
+                     enterDelay={1000} leaveDelay={200}>
                 <Typography
                     sx={{cursor: "default"}}>{nickname.length > 12 ? nickname.slice(0, 12) + "..." : nickname}
                 </Typography>

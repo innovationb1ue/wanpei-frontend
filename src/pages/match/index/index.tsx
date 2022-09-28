@@ -22,7 +22,7 @@ export default function Main() {
     const [checked, setChecked] = useState({ck1: false, ck2: true});
     // the start matching button text
     const [matchBtnText, setMatchBtnText] = useState("开始匹配")
-    // MatchMaking button status
+    // MatchMaking button status for debouncing.
     const [isDisabled, setIsDisabled] = useState(false)
     // flag for doing match making.
     const [isMatching, setIsMatching] = useState(false)
@@ -126,8 +126,8 @@ export default function Main() {
                 {/* match making column items*/}
                 <Box className={styles.matchMakingContainer}>
                     <Box className={styles.matchMakingTopEle}>
-                        <Typography className={styles.matchMakingTitle}>
-                            匹配菜单
+                        <Typography className={styles.matchMakingTitle} fontSize={40} fontWeight={"bold"}>
+                            匹配设置
                         </Typography>
                     </Box>
                     <Box className={styles.matchMakingMiddleEle}>
@@ -142,7 +142,7 @@ export default function Main() {
                                         });
                                         console.log(`ck1 = ${checked}`);
                                     }}
-                                    label="Label"
+                                    label="可以点着玩"
                                 />
                             </FormGroup>
                         </FormControl>
