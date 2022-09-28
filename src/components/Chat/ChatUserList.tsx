@@ -8,6 +8,8 @@ import {fetcher} from "@services/api";
 interface userListInterface {
     nickname: string
     avatar_url: string
+    steam_code: string
+    description: string
 }
 
 const ChatUserList: React.FC<{ HubID: string }> = (
@@ -32,8 +34,9 @@ const ChatUserList: React.FC<{ HubID: string }> = (
     return (
         <Box sx={{overflow: "scroll", overflowY: "hidden"}}>
             {
-                userList.map((val, idx) => {
-                    return <UserTag nickname={val.nickname} key={idx}/>
+                userList.sort().map((val, idx) => {
+                    return <UserTag nickname={val.nickname} steam_code={val.steam_code} description={val.description}
+                                    key={idx}/>
                 })
             }
         </Box>

@@ -14,7 +14,12 @@ const Personal = (): JSX.Element => {
     const router = useRouter()
     const {data, error} = useSWR("/api/user/current", fetcher)
     // have to provide default value here. otherwise, the input will be rendered as uncontrolled
-    const [formInput, setFormInput] = useState({nickname: "", steam_code: "", avatar_url: ""} as API.CurrentUser)
+    const [formInput, setFormInput] = useState({
+        nickname: "",
+        steam_code: "",
+        avatar_url: "",
+        description: ""
+    } as API.CurrentUser)
     // only set once when the user data is loaded from server
     useEffect(() => {
         const user = data?.data as API.CurrentUser
@@ -68,5 +73,6 @@ const alias = {
     steam_code: "Steam好友代码",
     games: "游戏列表",
     nickname: "昵称",
-    email: "邮箱"
+    email: "邮箱",
+    description: "简介"
 }

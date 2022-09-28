@@ -19,6 +19,7 @@ declare namespace API {
         email: string;
         user_status: number;
         user_role: number; // 用户角色 0-普通 1-管理员
+        description: string;
     };
 
     type baseResult<T> = {
