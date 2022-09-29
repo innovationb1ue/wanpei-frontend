@@ -1,4 +1,5 @@
 import * as React from "react";
+import {useState} from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -14,7 +15,6 @@ import Copyright from "@components/CopyRight";
 import {useRouter} from "next/router";
 import {useCurrentUser} from "@services/api";
 import {Alert, Snackbar} from "@mui/material";
-import {useEffect, useState} from "react";
 
 const theme = createTheme();
 
@@ -64,8 +64,8 @@ export default function SignIn() {
             currentRes?.data?.["Gorm.Model"]?.ID >= 0
         ) {
             console.log("should push to match/index");
-            router.push("/match/index")
-            setUser(currentRes.data)
+            event.preventDefault()
+            await router.push("/match/index")
             return
         } else {
             console.log("unknown error")

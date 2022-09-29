@@ -8,6 +8,7 @@
 
 .cardContainer {
   margin-right: 10px;
+  overflow: hidden;
   width: 80%;
   height: 100%;
 }
@@ -60,6 +61,5 @@
 
 
 .matchMakingTitle {
-  margin-left: 0;
-  font-size: 40px;
+  margin-left: 20px;
 }

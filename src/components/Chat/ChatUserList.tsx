@@ -33,14 +33,10 @@ const ChatUserList: React.FC<{ HubID: string }> = (
     }
     console.log(data)
     const userList = data.data as userListInterface[]
-    if (data && !error && userList === undefined) {
-        router.push("/match/index")
-        return <></>
-    }
     return (
         <Box sx={{overflow: "scroll", overflowY: "hidden"}}>
             {
-                userList.sort().map((val, idx) => {
+                userList?.sort().map((val, idx) => {
                     return <UserTag nickname={val.nickname} steam_code={val.steam_code} description={val.description}
                                     key={idx}/>
                 })

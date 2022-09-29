@@ -1,5 +1,6 @@
 import {Card, CardContent} from "@mui/material";
 import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 
 interface cardProps {
     nickname: string;
@@ -9,25 +10,23 @@ interface cardProps {
 
 const UserCard = ({nickname, description, steam_code}: cardProps): JSX.Element => {
     return (
-        <>
-            <Card sx={{minWidth: 275, padding: 0}}>
-                <CardContent>
-                    <Typography sx={{fontSize: 14}} color="text.secondary" gutterBottom>
-                        {nickname}
-                    </Typography>
-                    <Typography variant="h5" component="div" minHeight={"20px"} maxHeight={"100px"}>
-                        {description}
-                    </Typography>
+        <Card sx={{minWidth: 275, padding: 0, maxWidth: 350}}>
+            <CardContent>
+                <Typography variant={"h5"} gutterBottom>
+                    {nickname}
+                </Typography>
+                <h3>简介</h3>
+                <Typography component="div" fontSize={14} color={"text.secondary"} gutterBottom>
+                    {description}
+                </Typography>
+                <Box flexDirection={"column"} display={"flex"}>
                     <Typography sx={{mb: 1.5}} color="text.secondary">
-                        Steam Friend Code
-                    </Typography>
-                    <Typography variant="body2">
+                        Steam Friend Code:
                         {steam_code}
-                        <br/>
                     </Typography>
-                </CardContent>
-            </Card>
-        </>
+                </Box>
+            </CardContent>
+        </Card>
     )
 }
 

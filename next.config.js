@@ -1,4 +1,7 @@
 /** @type {import('next').NextConfig} */
+
+const isProd = process.env.NODE_ENV === 'production'
+
 const nextConfig = {
     reactStrictMode: true,
     swcMinify: true,
@@ -12,7 +15,7 @@ const nextConfig = {
     },
     webpack: (config, {isServer}) => {
         return config
-    }
+    },
 }
 
 module.exports = nextConfig

@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import React, {useEffect, useState} from "react";
 import {useCurrentUser} from "@services/api";
 import {useRouter} from "next/router";
-import {Divider, FormControl, FormGroup} from "@mui/material";
+import {Divider, FormControl, FormGroup, Tooltip} from "@mui/material";
 
 import Box from "@mui/material/Box";
 import styles from "./index.module.scss";
@@ -12,6 +12,7 @@ import GameList from "@/components/Game/GameList";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import CustomizedTabs from "@components/Tabs";
+import {HelpOutlineRounded} from "@mui/icons-material";
 import baseResult = API.baseResult;
 
 let socket: WebSocket | undefined;
@@ -91,8 +92,8 @@ export default function Main() {
                 const res = await r.json() as baseResult<undefined>
                 if (res.code === 1) {
                     socket?.close(1000) // normal closure
-                    setIsMatching(false)
                     socket = undefined
+                    setIsMatching(false)
                     setIsDisabled(false)
                 } else {
                     console.log(res.code)
@@ -118,6 +119,10 @@ export default function Main() {
             <CustomizedTabs/>
             <Box className={styles.main}>
                 {/* card list */}
+                <Tooltip title={"点击游戏卡片选取要匹配的游戏"}>
+
+                    <HelpOutlineRounded color={"info"} sx={{fontSize: "30px", marginRight: "5px"}}/>
+                </Tooltip>
                 <GameList
                     setSelectedGame={setSelectedGames}
                     selectedGame={selectedGames}
@@ -126,7 +131,8 @@ export default function Main() {
                 {/* match making column items*/}
                 <Box className={styles.matchMakingContainer}>
                     <Box className={styles.matchMakingTopEle}>
-                        <Typography className={styles.matchMakingTitle} fontSize={40} fontWeight={"bold"}>
+                        <Typography className={styles.matchMakingTitle} fontWeight={"bold"}
+                                    sx={{whiteSpace: "nowrap", fontSize: "40px"}}>
                             匹配设置
                         </Typography>
                     </Box>
@@ -150,7 +156,10 @@ export default function Main() {
                     </Box>
                     <Box className={styles.matchMakingBottomEle}>
                         <Button
-                            onClick={clickedMatchBtn}
+                            onClick={(evt) => {
+                                evt.preventDefault()
+                                clickedMatchBtn()
+                            }}
                             className={isMatching ? styles.DoingMatchMaking : styles.matchMakingButton}
                             sx={{borderRadius: "50%"}}
                             disabled={isDisabled}

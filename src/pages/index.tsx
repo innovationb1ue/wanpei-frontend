@@ -1,10 +1,5 @@
-import Footer from "@components/Footer";
-import Form from "@components/Form";
 import Navbar from "@/components/Navbar";
-import Features from "@/components/Sections/Features";
 import Intro from "@/components/Sections/Intro";
-import Productivity from "@/components/Sections/Productivity";
-import Reviews from "@/components/Sections/Reviews";
 import type {NextPage} from "next";
 import Head from "next/head";
 
@@ -21,11 +16,11 @@ const Home: NextPage = () => {
             <Navbar/>
             <main className={`${styles.main} ${styles.body}`}>
                 <Intro/>
-                <Features/>
-                <Productivity/>
-                <Reviews/>
-                <Form/>
-                <Footer/>
+                {/*<Features/>*/}
+                {/*<Productivity/>*/}
+                {/*<Reviews/>*/}
+                {/*<Form/>*/}
+                {/*<Footer/>*/}
             </main>
         </div>
     );

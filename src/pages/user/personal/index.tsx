@@ -10,6 +10,14 @@ import {useRouter} from "next/router";
 import {useSnackbar} from "notistack";
 
 
+interface fields {
+    nickname: boolean
+    steam_code: boolean
+    avatar_url: symbol
+    description: boolean
+}
+
+
 const Personal = (): JSX.Element => {
     const {mutate} = useSWRConfig()
     const router = useRouter()
@@ -22,6 +30,7 @@ const Personal = (): JSX.Element => {
         avatar_url: "",
         description: ""
     } as API.CurrentUser)
+    const [errorStatus, setErrorStatus] = useState({} as fields)
     // only set once when the user data is loaded from server
     useEffect(() => {
         const user = data?.data as API.CurrentUser
@@ -34,13 +43,29 @@ const Personal = (): JSX.Element => {
     const handleSubmit = async () => {
         console.log(formInput)
         if (!emailRegex.test(formInput.email)) {
+            setErrorStatus(prev => {
+                return {...prev, email: true}
+            })
             enqueueSnackbar("Please input a valid email address", {variant: 'error'})
+            return
+        } else {
+            setErrorStatus(prev => {
+                return {...prev, email: false}
+            })
+        }
+        if (!steamCodeRegex.test(formInput.steam_code)) {
+            setErrorStatus(prev => {
+                return {...prev, steam_code: true}
+            })
+            enqueueSnackbar("invalid steam code", {variant: 'error'})
             return
         }
         await fetch("/api/user/modify", {method: "POST", body: JSON.stringify(formInput)}).then(async res => {
             mutate("/api/user/current")
-            router.reload()  // just brutally force reload the page
-            enqueueSnackbar("Information changed")
+            enqueueSnackbar("修改成功")
+            setErrorStatus(prev => {
+                return {} as fields
+            })
         })
     }
 
@@ -63,7 +88,10 @@ const Personal = (): JSX.Element => {
                                               setFormInput({...formInput, [key]: evt.target.value})
                                           }} InputLabelProps={{shrink: val !== ""}}
                                           key={idx}
-                                          className={styles.input}/>
+                                          className={styles.input}
+                                          error={errorStatus[key as keyof typeof errorStatus] as boolean ?? false}
+                                          helperText={helpers[key as keyof typeof helpers]}
+                        />
                     })}
                     <Button sx={{
                         backgroundColor: '#2e1534', borderRadius: "15px", color: "white", margin: "auto", minWidth: 200,
@@ -77,7 +105,6 @@ const Personal = (): JSX.Element => {
 
 export default Personal
 
-
 const alias = {
     steam_code: "Steam好友代码",
     games: "游戏列表",
@@ -86,6 +113,13 @@ const alias = {
     description: "简介"
 }
 
+const helpers = {
+    steam_code: "正确的好友代码可以让你们更快的开始游戏！",
+    description: "其他人可以在聊天页面看到你的简介！"
+}
+
 const emailRegex = new RegExp(
     /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
 );
+
+const steamCodeRegex = new RegExp(/^\d+$/);

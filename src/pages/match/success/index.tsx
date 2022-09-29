@@ -1,11 +1,12 @@
 import {NextRouter, withRouter} from "next/router";
 import React, {Component} from "react";
-import {TextField} from "@mui/material";
+import {TextField, ThemeProvider} from "@mui/material";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import ChatMessage from "@components/Chat/ChatMessage";
 import styles from "./index.module.scss";
 import ChatUserList from "@components/Chat/ChatUserList";
+import {createTheme} from "@mui/material/styles";
 
 let socket: WebSocket;
 
@@ -20,6 +21,20 @@ interface States {
     messages: SOCKET.chatMessage[];
     HubID: string;
 }
+
+
+const theme = createTheme({
+    components: {
+        MuiOutlinedInput: {
+            styleOverrides: {
+                root: {
+                    borderRadius: "10px"
+                }
+            }
+        }
+    }
+})
+
 
 class Success extends Component<Props, States> {
     private once: boolean;
@@ -147,6 +162,12 @@ class Success extends Component<Props, States> {
                 }}
             >
                 <Box className={styles.leftContainer}>
+                    <Box>
+                        <Button className={styles.backBtn} onClick={(evt) => {
+                            evt.preventDefault()
+                            this.props.router.push("/match/index")
+                        }}>返回</Button>
+                    </Box>
                     <Box className={styles.messageArea}>
                         {this.state.messages.map((val, idx) => {
                             return (
@@ -160,15 +181,20 @@ class Success extends Component<Props, States> {
                     </Box>
 
                     <Box display={"flex"} marginTop={"10px"} marginBottom={"20px"}>
-                        <TextField
-                            label={"Message"}
-                            sx={{flexGrow: 1, marginRight: "10px"}}
-                            id={"messageField"}
-                            inputRef={this.inputRef} // use ref to access value
-                            autoComplete={"off"}
-                        />
+                        <ThemeProvider theme={theme}>
+                            <TextField
+                                label={"Message"}
+                                sx={{flexGrow: 1, marginRight: "10px"}}
+                                id={"messageField"}
+                                inputRef={this.inputRef} // use ref to access value
+                                autoComplete={"off"}
+                            />
+                        </ThemeProvider>
                         <Button
-                            onClick={() => this.SendClicked()}
+                            onClick={(evt) => {
+                                evt.preventDefault()
+                                this.SendClicked()
+                            }}
                             className={styles.sendMessageBtn}
                         >
                             <p>发送消息</p>
@@ -183,5 +209,6 @@ class Success extends Component<Props, States> {
         );
     }
 }
+
 
 export default withRouter(Success);
