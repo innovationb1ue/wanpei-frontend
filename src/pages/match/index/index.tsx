@@ -13,9 +13,11 @@ import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import CustomizedTabs from "@components/Tabs";
 import {HelpOutlineRounded} from "@mui/icons-material";
+import {settings} from "@custom.settings";
 import baseResult = API.baseResult;
 
 let socket: WebSocket | undefined;
+
 
 export default function Main() {
     const router = useRouter();
@@ -74,7 +76,7 @@ export default function Main() {
                     const body = (await res.json()) as { message: string; data: string };
                     const token = body.data as string;
                     socket = new WebSocket(
-                        `wss://${window.location.hostname}:8096/match/socket?auth=${token}&selectedGame=${selectedGames}`
+                        `${settings.socketHost}/match/socket?auth=${token}&selectedGame=${selectedGames}`
                     );
                     socket.onmessage = (ev) => {
                         handleSocketMessage(JSON.parse(ev.data));
