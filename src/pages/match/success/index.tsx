@@ -112,7 +112,7 @@ class Success extends Component<Props, States> {
             });
 
             socket = new WebSocket(
-                `ws://${window.location.hostname}:8096/hub?ID=${ID}`
+                `wss://${window.location.hostname}:8096/hub?ID=${ID}`
             );
             socket.onmessage = (ev) => {
                 this.handleSocketMessage(
