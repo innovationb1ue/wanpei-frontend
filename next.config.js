@@ -9,7 +9,7 @@ const nextConfig = {
         return [
             {
                 source: "/api/:path*",
-                destination: "http://localhost:8096/:path*",
+                destination: isProd ? "http://localhost:8096/:path*" : "121.37.197.186:8096/:path*",
             }
         ]
     },
