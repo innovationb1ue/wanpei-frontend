@@ -1,13 +1,20 @@
 export const isProd = process.env.NODE_ENV === 'production'
 
-export const prodSettings = {
-    socketHost: "wss://114.116.242.50:8096"
+
+interface SettingObj {
+    socketHost: () => string
 }
+
+export const prodSettings = {
+    socketHost: () => "wss://114.116.242.50:8096" // indicate the server address when deploying
+} as SettingObj
 
 export const devSettings = {
-    socketHost: "ws://localhost:8096"
-}
+    socketHost: () => {
+        return `ws://${location.host}:8096`
+    }
+} as SettingObj
 
-export const settings = isProd ? prodSettings : devSettings
+export const settings = isProd ? prodSettings : devSettings as SettingObj
 
 

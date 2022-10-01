@@ -16,6 +16,8 @@ import {HelpOutlineRounded} from "@mui/icons-material";
 import {settings} from "@custom.settings";
 import baseResult = API.baseResult;
 
+const socketHost = settings.socketHost
+
 let socket: WebSocket | undefined;
 
 
@@ -76,7 +78,7 @@ export default function Main() {
                     const body = (await res.json()) as { message: string; data: string };
                     const token = body.data as string;
                     socket = new WebSocket(
-                        `${settings.socketHost}/match/socket?auth=${token}&selectedGame=${selectedGames}`
+                        `${socketHost()}/match/socket?auth=${token}&selectedGame=${selectedGames}`
                     );
                     socket.onmessage = (ev) => {
                         handleSocketMessage(JSON.parse(ev.data));

@@ -7,6 +7,9 @@ import ChatMessage from "@components/Chat/ChatMessage";
 import styles from "./index.module.scss";
 import ChatUserList from "@components/Chat/ChatUserList";
 import {createTheme} from "@mui/material/styles";
+import {settings} from "@custom.settings";
+
+const socketHost = settings.socketHost;
 
 let socket: WebSocket;
 
@@ -112,7 +115,7 @@ class Success extends Component<Props, States> {
             });
 
             socket = new WebSocket(
-                `${window.location.hostname}/hub?ID=${ID}`
+                `${socketHost()}/hub/join?ID=${ID}`
             );
             socket.onmessage = (ev) => {
                 this.handleSocketMessage(
