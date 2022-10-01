@@ -1,7 +1,7 @@
 export const isProd = process.env.NODE_ENV === 'production'
 
 export const prodSettings = {
-    socketHost: "wss://121.37.197.186:8096"
+    socketHost: "wss://114.116.242.50:8096"
 }
 
 export const devSettings = {
