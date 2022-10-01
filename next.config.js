@@ -1,7 +1,5 @@
 /** @type {import('next').NextConfig} */
 
-import {settings} from "./src/custom.settings"
-
 const isProd = process.env.NODE_ENV === 'production'
 
 const nextConfig = {
@@ -32,19 +30,6 @@ const nextConfig = {
                 },
             ]
         },
-            {
-                // matching all API routes
-                source: settings.socketHost,
-                headers: [
-                    {key: "Access-Control-Allow-Credentials", value: "true"},
-                    {key: "Access-Control-Allow-Origin", value: "*"},
-                    {key: "Access-Control-Allow-Methods", value: "GET,OPTIONS,PATCH,DELETE,POST,PUT"},
-                    {
-                        key: "Access-Control-Allow-Headers",
-                        value: "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
-                    },
-                ]
-            }
         ]
     }
 }
