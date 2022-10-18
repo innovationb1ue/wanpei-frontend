@@ -9,7 +9,7 @@ const nextConfig = {
         return [
             {
                 source: "/api/:path*",
-                destination: isProd ? "http://114.116.242.50:8096/:path*" : "http://localhost:8096/:path*",
+                destination: isProd ? "https://wanpei.top:8096/:path*" : "http://localhost:8096/:path*",
             }
         ]
     },

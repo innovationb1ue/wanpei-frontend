@@ -23,14 +23,13 @@
   @include lg {
     font-size: 140%;
   }
-}
 
-.body > section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  text-align: center;
-  padding: 25px;
-  margin-bottom: 100px;
+  > section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+    padding: 25px;
+  }
 }
