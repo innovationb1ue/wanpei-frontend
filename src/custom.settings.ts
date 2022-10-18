@@ -6,7 +6,7 @@ interface SettingObj {
 }
 
 export const prodSettings = {
-    socketHost: () => "wss://114.116.242.50:8096" // indicate the server address when deploying
+    socketHost: () => "wss://wanpei.top:8096" // indicate the server address when deploying
 } as SettingObj
 
 export const devSettings = {
