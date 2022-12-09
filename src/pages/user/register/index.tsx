@@ -1,10 +1,9 @@
 import * as React from 'react';
+import {ChangeEvent, useState} from 'react';
 import Avatar from '@mui/material/Avatar';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import LoadingButton from '@mui/lab/LoadingButton';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
@@ -12,18 +11,18 @@ import Container from '@mui/material/Container';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 
 import styles from "./register.module.scss"
-import {ChangeEvent, FormEvent, useState} from "react";
 import {useFormControl} from "@mui/material";
-import Navbar from "@components/Navbar";
 import Copyright from "@components/CopyRight";
-import {router} from "next/client";
 import {useRouter} from "next/router";
+import Button from "@mui/material/Button";
+import {ArrowBack} from "@mui/icons-material";
 
 const theme = createTheme();
 
 const Register: React.FC = () => {
     const router = useRouter()
     const [isLoading, setIsLoading] = useState(false)
+    // submit register request
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         setIsLoading(true)
         event.preventDefault();
@@ -31,10 +30,10 @@ const Register: React.FC = () => {
         const registerCall = await fetch("/api/user/register", {method: "POST", body: data})
         const registerResult = await registerCall.json() as API.baseResult<API.CurrentUser>
         setIsLoading(false)
-        if (registerResult.message === 'ok') {
+        if (registerResult.code === 1) {
             await router.push("/match/index")
         } else {
-            alert("Failed. Possibly due to repeated email. ")
+            alert(`Failed. ${registerResult.message}`)
         }
     };
     const [input, setInput] = useState({
@@ -91,6 +90,23 @@ const Register: React.FC = () => {
                     }}
                     className={styles.container}
                 >
+                    <Box sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "flex-start",
+                        alignSelf: "flex-start"
+                    }}>
+                        <Button onClick={evt => {
+                            evt.preventDefault()
+                            router.push("/user/login")
+                        }}
+                                fullWidth
+                                variant="outlined"
+                                sx={{mt: 3, mb: 1, fontSize: "1rem"}}
+                                endIcon={<ArrowBack/>}
+                        >Login</Button>
+                    </Box>
+
                     <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
                         <LockOutlinedIcon/>
                     </Avatar>
@@ -140,10 +156,7 @@ const Register: React.FC = () => {
                         >
                             注册
                         </LoadingButton>
-                        <Grid container>
-                            <Grid item xs>
-                            </Grid>
-                        </Grid>
+
                     </Box>
                 </Box>
                 <Copyright sx={{mt: 8, mb: 4}}/>
