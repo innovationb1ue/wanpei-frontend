@@ -41,25 +41,22 @@ export default Features;
 const elements = [
     {
         image: "/icon-security.svg",
-        title: "Access your files, anywhere",
-        text: `The ability to use a smartphone, tablet, or
-    computer to access your account means your files follow you everywhere.`,
+        title: "安全聊天",
+        text: `1对1或者多人在线群聊，数据加密保障。`,
     },
     {
-        image: "/icon-security.svg",
-        title: "Access your files, anywhere",
-        text: `2-factor authentication and user-controlled encryption are just a couple of the security features we allow to help secure your files.`,
+        image: "/icon-access-anywhere.svg",
+        title: "随时登陆",
+        text: `只需要浏览器，无论是电脑还是手机，随时匹配游戏好友`,
     },
     {
         image: "/icon-collaboration.svg",
-        title: "Real-time collaboration",
-        text: `Securely share files and folders with friends, family and colleagues for live collaboration. No email
-    attachments required.`,
+        title: "短延时",
+        text: `实时交流无障碍`,
     },
     {
         image: "/icon-any-file.svg",
-        title: "Real-time collaboration",
-        text: `Whether you're sharing holidays photos or work
-    documents, Fylo has you covered allowing for all file types to be securely stored and shared.`,
+        title: "可拓展性",
+        text: `适配多平台`,
     },
 ];

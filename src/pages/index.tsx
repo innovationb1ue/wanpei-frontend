@@ -5,6 +5,8 @@ import Head from "next/head";
 
 import styles from "../styles/index.module.scss"
 import Box from "@mui/material/Box";
+import Features from "@components/Sections/Features";
+import Footer from "@components/Footer";
 
 const Home: NextPage = () => {
     return (
@@ -17,11 +19,11 @@ const Home: NextPage = () => {
             <Navbar/>
             <main className={`${styles.main} ${styles.body}`}>
                 <Intro/>
-                {/*<Features/>*/}
+                <Features/>
                 {/*<Productivity/>*/}
                 {/*<Reviews/>*/}
                 {/*<Form/>*/}
-                {/*<Footer/>*/}
+                <Footer/>
             </main>
         </Box>
     );

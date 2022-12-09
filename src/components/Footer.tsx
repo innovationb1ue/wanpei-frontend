@@ -2,39 +2,23 @@ import {FC} from "react";
 import styles from "/src/styles/Footer.module.scss";
 import Image from "next/image";
 import Link from "next/link";
-import {
-    IoLogoFacebook,
-    IoLogoTwitter,
-    IoLogoInstagram,
-} from "react-icons/io5";
+import {IoLogoFacebook, IoLogoInstagram, IoLogoTwitter,} from "react-icons/io5";
 
 const Footer: FC = () => {
     return (
         <footer className={styles.main}>
-            <Image
-                src="/public/logo.svg"
-                alt="Fylo Logo"
-                width={176}
-                height={152}
-                objectFit="contain"
-            />
             <div className={styles.lgFlexMain}>
                 <address>
                     <div className={styles.flex}>
                         <Icon src="location"/>
                         <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                            eiusmod tempor incididunt ut labore et dolore magna aliqua
+                            Location Unknown
                         </p>
                     </div>
                     <div className={styles.wrapper}>
                         <div className={styles.flex}>
-                            <Icon src="phone"/>
-                            <a href="tel:+1-543-123-4567">+1-543-123-4567</a>
-                        </div>
-                        <div className={styles.flex}>
                             <Icon src="email"/>
-                            <a href="mailto:example@fylo.com">example@fylo.com</a>
+                            <a href="mailto:realjeffblue@gmail.com">realjeffblue@gmail.com</a>
                         </div>
                     </div>
                 </address>
@@ -70,10 +54,10 @@ export default Footer;
 const Links: FC<{ from: number; to: number }> = ({from, to}) => {
     return (
         <ul>
-            {links.slice(from, to).map((item) => {
+            {links.slice(from, to).map((item, idx) => {
                 return (
                     <li key={item}>
-                        <Link href="#">
+                        <Link href={hrefs[idx]}>
                             <a>{item}</a>
                         </Link>
                     </li>
@@ -97,10 +81,8 @@ const Icon: FC<{
 
 const links = [
     "About Us",
-    "Jobs",
-    "Press",
-    "Blog",
-    "Contact Us",
-    "Terms",
-    "Privacy",
 ];
+
+const hrefs = [
+    "https://www.github.com/innovationb1ue"
+]

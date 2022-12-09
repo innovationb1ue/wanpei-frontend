@@ -4,6 +4,12 @@
 .main {
   background-color: $footerBG;
   padding: 5vw;
+  font-size: 1.3rem;
+  color: white;
+
+  a {
+    color: #73a5ed;
+  }
 
   address {
     margin-bottom: 50px;
