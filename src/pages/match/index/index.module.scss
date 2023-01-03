@@ -21,10 +21,9 @@
 }
 
 .matchMakingTopEle {
-  text-align: center;
-  height: 5%;
   align-items: center;
   display: flex;
+  flex-direction: column;
 }
 
 .matchMakingMiddleEle {

@@ -42,17 +42,6 @@ const Personal = (): JSX.Element => {
 
     const handleSubmit = async () => {
         console.log(formInput)
-        if (!emailRegex.test(formInput.email)) {
-            setErrorStatus(prev => {
-                return {...prev, email: true}
-            })
-            enqueueSnackbar("Please input a valid email address", {variant: 'error'})
-            return
-        } else {
-            setErrorStatus(prev => {
-                return {...prev, email: false}
-            })
-        }
         if (!steamCodeRegex.test(formInput.steam_code)) {
             setErrorStatus(prev => {
                 return {...prev, steam_code: true}
@@ -61,8 +50,8 @@ const Personal = (): JSX.Element => {
             return
         }
         await fetch("/api/user/modify", {method: "POST", body: JSON.stringify(formInput)}).then(async res => {
-            mutate("/api/user/current")
             enqueueSnackbar("修改成功")
+            await mutate("/api/user/current")
             setErrorStatus(prev => {
                 return {} as fields
             })
